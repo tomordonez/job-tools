@@ -16,33 +16,39 @@ Use JavaScript to remove the Promoted results.
 - URL: (Enter JS code below)
 - Save bookmark
 - In Linkedin Jobs, in the results page.
-    - Scroll down to the bottom to display all results.
-    - Go to the bookmark and click on it
-    - The Promoted results should be removed from the page
-
-Todo:
-- Auto scroll down and up to load the results. I bet there is a good way of doing that
-but this didn't work for me:
-
-This gets the height of the left results section:
-
-    var resultWindowHeight = document.querySelector('.scaffold-layout__list').scrollHeight 
-
-This didn't scroll down:
-
-    window.scrollTo(0, resultWindowHeight)
-
+    1. Go to the bookmark and click on it
+    2. (Don't touch the browser) Wait a few seconds to auto-scroll to the bottom
+    3. The Promoted results should be removed from the page
+    4. Review/apply to jobs
+    5. Go to the next page and repeat from step 1.
 */
 
 // One-Line JS to add to the bookmark URL
-javascript: (function () { var parentResults = document.querySelectorAll('.jobs-search-results__list-item'); for (let result of parentResults) { if (result.innerText.includes('Promoted')) { result.remove(); } } })();
+javascript: (async () => { var resultWindow = document.querySelector('.jobs-search-results-list'); var resultWindowHeight = resultWindow.scrollHeight; resultWindow.scrollTo({ top: resultWindowHeight / 4, behavior: 'smooth' }); await new Promise(r => setTimeout(r, 2000)); resultWindow.scrollTo({ top: resultWindowHeight / 2, behavior: 'smooth' }); await new Promise(r => setTimeout(r, 2000)); resultWindow.scrollTo({ top: resultWindowHeight, behavior: 'smooth' }); await new Promise(r => setTimeout(r, 2000)); var results = document.querySelectorAll('.jobs-search-results__list-item'); for (let result of results) { if (result.innerText.includes('Promoted')) { result.remove(); } } resultWindow.scrollTo(0, 0); })();
 
 // JS Prettified
-javascript: (function () {
-    var parentResults = document.querySelectorAll('.jobs-search-results__list-item');
-    for (let result of parentResults) {
+javascript: (async () => {
+
+    var resultWindow = document.querySelector('.jobs-search-results-list');
+    var resultWindowHeight = resultWindow.scrollHeight;
+
+    resultWindow.scrollTo({ top: resultWindowHeight / 4, behavior: 'smooth' });
+    await new Promise(r => setTimeout(r, 2000));
+
+    resultWindow.scrollTo({ top: resultWindowHeight / 2, behavior: 'smooth' });
+    await new Promise(r => setTimeout(r, 2000));
+
+    resultWindow.scrollTo({ top: resultWindowHeight, behavior: 'smooth' });
+    await new Promise(r => setTimeout(r, 2000));
+
+    // Remove all Promoted results
+    var results = document.querySelectorAll('.jobs-search-results__list-item');
+
+    for (let result of results) {
         if (result.innerText.includes('Promoted')) {
             result.remove();
         }
     }
+    // Auto scroll up
+    resultWindow.scrollTo(0, 0);
 })();
